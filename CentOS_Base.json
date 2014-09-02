@@ -1,0 +1,52 @@
+{
+ "variables": {
+   "example": "",
+   "isopath": "/home/jdoppes/Downloads/ISOS/CentOS-6.5-x86_64-minimal.iso"
+ },
+
+ 
+  "builders": [{
+    
+  "type": "virtualbox-iso",
+  "guest_os_type": "RedHat_64",
+
+  "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--vram", "32"],
+            ["modifyvm", "{{.Name}}", "--memory", "1024", "--acpi", "on"],
+            ["modifyvm", "{{.Name}}", "--cpus", "2"]
+            
+
+
+
+        ],
+
+  "disk_size": 30000,
+  "hard_drive_interface": "sata",
+
+  "iso_url": "/home/jdoppes/Downloads/ISOS/CentOS-6.5-x86_64-minimal.iso",
+  "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+  "iso_checksum_type": "md5",
+
+  "ssh_username": "root",
+  "ssh_password": "password",
+  "ssh_wait_timeout": "20m",
+  "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+
+  "http_directory": "./http",
+  "http_port_min" : 9001,
+  "http_port_max" : 9001,
+
+  "boot_command" : [
+            "<esc><wait>linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<return>"
+            ]
+}],
+
+"post-processors": [
+    {
+      "type": "vagrant",
+      "only":["virtualbox-iso"]
+    }
+  ]
+
+
+}
